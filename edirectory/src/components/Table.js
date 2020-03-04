@@ -13,7 +13,7 @@ class Table extends Component {
 
   componentDidMount() {
     fetch("https://randomuser.me/")
-      .then(res => res.json())
+      .then(res => JSON.parse(res))
       .then(
         result => {
           this.setState({
@@ -46,10 +46,10 @@ class Table extends Component {
             <th>Email</th>
           </thead>
           <tbody>
-          { items.map(row => (
-                <tr key={row.id}>
+          { items.results.map(row => (
+                <tr key={row.id.value}>
                   <td>
-                    {row.name}
+                    {row.name.first}
                   </td>
                   <td>{row.cost}</td>
                 </tr>
