@@ -38,15 +38,23 @@ class Table extends Component {
   //from lesson 19
   getUsers = () => {
     API.search()
-    .then(results => 
+    .then(res => 
+      // TODO res returning undefined
+      console.log(res),
       this.setState({
         isLoaded: true,
-        items: results.items
+        items: res.items
       }))
       .catch(err => {
         console.log(err);
         this.setState({ err })
       })
+  }
+
+  handleTyping = (event) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    //TODO handle input here
   }
 
   render() {
@@ -57,6 +65,7 @@ class Table extends Component {
       return <div>Loading...</div>
     } else {
       return (
+        <input onChange={handleTyping} type="search" placeholder="Search"></input>
         <table className="table">
           <thead>
             <th>ID</th>
