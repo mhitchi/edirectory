@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
 import API from "../utils/API";
-
-
 class Table extends Component {
   constructor(props) {
     super(props);
@@ -12,51 +9,29 @@ class Table extends Component {
       items: []
     };
   }
-
   componentDidMount() {
-    // fetch("https://randomuser.me/")
-    //   // TRIED .then(res => res.json())
-    //   // TRIED .then(res => JSON.parse())
-    //   .then(res => res.json())
-    //   .then(
-    //     result => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         items: result.items
-    //       });
-    //     },
-    //     error => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         error
-    //       });
-    //     }
-    //   )
     this.getUsers();
   }
-
   //from lesson 19
   getUsers = () => {
-    API.search()
-    .then(res => 
+    API.search().then(res => {
       // TODO res returning undefined
-      console.log(res),
+      console.log(res);
       this.setState({
         isLoaded: true,
-        items: res.items
-      }))
-      .catch(err => {
-        console.log(err);
-        this.setState({ err })
+        items: res.data
       })
+    })
+    .catch(err => {
+      console.log(err);
+      this.setState({ err })
+    })
   }
-
   handleTyping = (event) => {
     event.preventDefault();
     console.log(event.target.value);
     //TODO handle input here
   }
-
   render() {
     const { error, isLoaded, items } = this.state;
     if( error ) {
@@ -65,28 +40,31 @@ class Table extends Component {
       return <div>Loading...</div>
     } else {
       return (
-        <input onChange={handleTyping} type="search" placeholder="Search"></input>
-        <table className="table">
-          <thead>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-          </thead>
-          <tbody>
-          { items.results.map(row => (
-                <tr key={row.id.value}>
-                  <td>
-                    {row.name.first}
-                  </td>
-                  <td>{row.cost}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <>
+          <input onChange={this.handleTyping} type="search" placeholder="Search"></input>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              { items.results.map(row => (
+                  <tr key={row.id.value}>
+                    <td>
+                      {row.name.first} {row.name.last}
+                    </td>
+                    <td>{row.phone}</td>
+                    <td>{row.email}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </>
       )
     }
   }
 }
-
 export default Table;
