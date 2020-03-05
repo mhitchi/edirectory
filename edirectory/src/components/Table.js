@@ -8,10 +8,20 @@ class Table extends Component {
       isLoaded: false,
       items: [],
     };
+    //preserve initial state in a new object
+    this.initialState = this.state;
   }
+
+  //reset state to initial state
+  resetState = () => {
+    this.setState(this.initialState);
+    this.getUsers();
+  }
+
   componentDidMount() {
     this.getUsers();
   }
+
   //from lesson 19
   getUsers = () => {
     API.search().then(res => {
@@ -29,12 +39,10 @@ class Table extends Component {
   }
   handleTyping = (event) => {
     event.preventDefault();
-    // console.log(event.target.value);
-    console.log(this.state.items);
-    // const newItems = this.state.items.map(
-    //   item => {item.name.last.filter(event => event.includes(event.target.value))}
-    // );
+    
     const newItems = [];
+
+    //iterate through items, check if last name includes input, add matches to newItems arr
     for( let i = 0; i < this.state.items.length; i++) {
       let item = this.state.items[i];
       
@@ -42,9 +50,14 @@ class Table extends Component {
         newItems.push(this.state.items[i]);
       }
     }
-    this.setState({
-      items: newItems
-    })
+    //if input exists, set state items to newItems arr, else if input is empty, items return to default
+    if( event.target.value.trim() !== "" ) {
+      this.setState({
+        items: newItems
+      })
+    } else if( event.target.value.trim() === "" ) {
+      this.resetState()
+    }
   }
 
   render() {
