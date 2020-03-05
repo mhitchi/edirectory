@@ -6,7 +6,7 @@ class Table extends Component {
     this.state = {
       err: null,
       isLoaded: false,
-      items: []
+      items: [],
     };
   }
   componentDidMount() {
@@ -19,7 +19,7 @@ class Table extends Component {
       console.log(res);
       this.setState({
         isLoaded: true,
-        items: res.data
+        items: res.data.results
       })
     })
     .catch(err => {
@@ -29,9 +29,24 @@ class Table extends Component {
   }
   handleTyping = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
-    //TODO handle input here
+    // console.log(event.target.value);
+    console.log(this.state.items);
+    // const newItems = this.state.items.map(
+    //   item => {item.name.last.filter(event => event.includes(event.target.value))}
+    // );
+    const newItems = [];
+    for( let i = 0; i < this.state.items.length; i++) {
+      let item = this.state.items[i];
+      
+      if( item.name.last.includes(event.target.value) ){
+        newItems.push(this.state.items[i]);
+      }
+    }
+    this.setState({
+      items: newItems
+    })
   }
+
   render() {
     const { error, isLoaded, items } = this.state;
     if( error ) {
@@ -51,7 +66,7 @@ class Table extends Component {
               </tr>
             </thead>
             <tbody>
-              { items.results.map(row => (
+              { items.map(row => (
                   <tr key={row.id.value}>
                     <td>
                       {row.name.first} {row.name.last}
